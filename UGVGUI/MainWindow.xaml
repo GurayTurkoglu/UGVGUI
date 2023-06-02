@@ -1,0 +1,190 @@
+﻿<Fluent:RibbonWindow x:Class="UGVGUI.AnaEkran"
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:gmaps="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
+                     xmlns:Fluent="urn:fluent-ribbon"
+                     xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+                     Title="Otonom Arac Yer Kontrol Istasyonu - 180106106039" 
+                     Width="800" 
+                     Height="600" MouseDown="RibbonWindow_MouseDoubleClick" KeyDown="RibbonWindow_KeyDown" KeyUp="RibbonWindow_KeyUp">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Fluent:Ribbon Grid.Row="0">
+            <Fluent:Ribbon.Menu>
+                <Fluent:Backstage>
+                </Fluent:Backstage>
+            </Fluent:Ribbon.Menu>
+
+            <!--Tabs-->
+            <Fluent:RibbonTabItem Header="Harita">
+                <Fluent:RibbonGroupBox Header="Harita Seçenekleri">
+                    <Fluent:Button Header="Sokak Harita"
+                                   Icon="sokak.ico"
+                                   Click="harita_sokak"/>
+
+                    <Fluent:Button Header="Uydu Harita"
+                                   Icon="uydu.ico"
+                                   Click="harita_uydu"/>
+
+                    <Fluent:Button Header="Hibrit Harita"
+                                   Icon="hibrit.ico"
+                                   Click="harita_hibrit"/>
+
+                    <Fluent:Button Header="Arazi Harita"
+                                   Icon="arazi.ico"
+                                   Click="harita_arazi"/>
+
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Yakınlaştırma ve Kaydırma">
+                    <Fluent:Button Header="Yakınlaştır"
+                                   Icon="yakinlastir.ico"
+                                   Click="yakinlastirma"/>
+                    <Fluent:Button Header="Uzaklaştır"
+                                   Icon="uzaklastir.ico"
+                                   Click="uzaklastirma"/>
+                    <Fluent:Button x:Name="kaydirmabuton" Header="Kaydırma Aktif"
+                                   Icon="kaydir.ico"
+                                   Click="kaydirma_aktif"/>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Tile Yükleme Modu">
+                    <Fluent:Button Header = "Server ve Cache" Size="Middle" Icon="servercache.ico" Click="server_ve_cache" />
+                    <Fluent:Button Header = "Sadece Server" Size="Middle" Icon="sadeceserver.ico" Click="sadece_server"/>
+                    <Fluent:Button Header = "Sadece Cache" Size="Middle" Icon="sadececache.ico" Click="sadece_cache"/>
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Header="Görev Planlayıcı">
+                <Fluent:RibbonGroupBox Header="Rota ve Bölge Belirleme">
+                    <Fluent:Button x:Name="rota_tasarim_buton" Header="Rota Tasarımı"
+                                   Icon="rotatasarimi.ico"
+                                   Click="rotatasarimiacik"/>
+                    <Fluent:Button Header="Yasaklı Bölge Tanımı"
+                                   Icon="yasakbolge.ico"
+                                   Click="kaydirma_kapali"/>
+                    <Fluent:Button Header="Hız Sınırı Tanımlama"
+                                   Icon="hizlimit.ico"
+                                   Click="kaydirma_kapali"/>
+                    <Fluent:Button Header="Rotaları Temizle"
+                                   Icon="temizle.ico"
+                                   Click="rotatemizle"/>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Görev Komutları">
+                    <Fluent:Button Header="Görevi Başlat"
+                                   Icon="gorevbaslat.ico"
+                                   Click="gorev_baslat"/>
+                    <Fluent:Button Header="Görevi Durdur"
+                                   Icon="gorevidurdur.ico"
+                                   Click="gorev_durdur"/>
+                    <Fluent:Button Header="Manuel Kontrol"
+                                   Icon="remote.ico"
+                                   Click="manuel_kontrol"/>
+                </Fluent:RibbonGroupBox>
+
+            </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Header="COM Bağlantı">
+                <Fluent:RibbonGroupBox Header="COM Port Seçenekleri">
+                    <Fluent:Button Header="COM Bağlantısını Başlat"
+                                   Icon="comportbaglan.ico"
+                                   Click="combaglan" x:Name="comport_baslat"/>
+                    <Fluent:Button Header="Port Yenile"
+                                   Icon="comportyenile.ico"
+                                   Click="port_yenile"/>
+                    <Fluent:ComboBox Header="COM Port Seçimi" x:Name="comport_secim" IsReadOnly="True"/>
+                    <Fluent:ComboBox Header="Veri Bit Oranı (bit/s)" x:Name="bitorani_secim" IsReadOnly="True">
+                        <ComboBoxItem Content="4800"/>
+                        <ComboBoxItem Content="9600"/>
+                        <ComboBoxItem Content="115200"/>
+                    </Fluent:ComboBox>
+                    <Fluent:ComboBox Header="Parite" x:Name="parite_secim" IsReadOnly="True" >
+                        <ComboBoxItem Content="None"/>
+                        <ComboBoxItem Content="Even"/>
+                        <ComboBoxItem Content="Odd"/>
+                    </Fluent:ComboBox>
+                </Fluent:RibbonGroupBox>
+
+            </Fluent:RibbonTabItem>
+        </Fluent:Ribbon>
+
+        <Grid Grid.Row="1">
+            <gmaps:GMapControl x:Name="HaritaObj" Loaded="harita_yukle"/>
+            <Expander Background="#FFEEEEEE" Opacity="0.85"  x:Name="noktamenu" Header="Noktalar" HorizontalAlignment="Right" VerticalAlignment="Top" IsExpanded="False" ExpandDirection="Left" FlowDirection="LeftToRight">
+
+                <Grid Width="300" Height="{Binding ActualHeight, 
+              RelativeSource ={RelativeSource AncestorType = {x:Type Window}}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ListBox x:Name="listBox" Grid.Row="0"/>
+                </Grid>
+            </Expander>
+            <Expander Background="#FFEEEEEE" Opacity="0.85"  x:Name="telemetrimenu" Header="Telemetri" HorizontalAlignment="Left" VerticalAlignment="Top" IsExpanded="True" ExpandDirection="Right" FlowDirection="LeftToRight">
+                <Grid Width="500" 
+      Height="{Binding ActualHeight, 
+              RelativeSource ={RelativeSource AncestorType = {x:Type Window}}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <lvc:CartesianChart x:Name="chrt" LegendLocation="Right" Grid.Row="0" HorizontalAlignment="Left" Width="500" Grid.ColumnSpan="4">
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="İvme" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="Zaman" Labels="{Binding Labels}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                    </lvc:CartesianChart>
+
+                    <lvc:CartesianChart x:Name="chrt2" LegendLocation="Right" Grid.Row="1" HorizontalAlignment="Left" Width="500" Grid.ColumnSpan="4">
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="Hız" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="Zaman" Labels="{Binding Labels}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                    </lvc:CartesianChart>
+                    <lvc:CartesianChart x:Name="chrt3" LegendLocation="Right" Grid.Row="2" HorizontalAlignment="Left" Width="500" Grid.ColumnSpan="4">
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="Mesafe" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="Zaman" Labels="{Binding Labels}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                    </lvc:CartesianChart>
+
+                    <lvc:Gauge x:Name="sat" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left"  Margin="5" Height="100" Width="100" FromColor="Red" ToColor="LawnGreen"
+                   From="0" To="20" Value="0"/>
+
+                    <lvc:Gauge x:Name="gaugehiz" Grid.Row="3" Grid.Column="1"  Margin="5" Height="100" Width="100" FromColor="LawnGreen" ToColor="Red"
+                   From="0" To="25" Value="0"/>
+
+                    <lvc:Gauge x:Name="hdop" Grid.Row="3" Grid.Column="2"  Margin="5" Height="100" Width="100" FromColor="LawnGreen" ToColor="Red"
+                   From="0" To="5" Value="0" />
+
+                    <TextBlock FontSize="12" Grid.Row="4"  Grid.Column="0" HorizontalAlignment="Left" Margin="25,0,0,0">Uydu Sayısı</TextBlock>
+                    <TextBlock FontSize="12" Grid.Row="4"  Grid.Column="1" HorizontalAlignment="Center">Araç Hızı (km/h)</TextBlock>
+                    <TextBlock FontSize="12" Grid.Row="4"  Grid.Column="2" HorizontalAlignment="Center">HDOP</TextBlock>
+                    <TextBlock FontSize="12" Grid.Row="4"  Grid.Column="3" HorizontalAlignment="Center">Yönelim (deg)</TextBlock>
+                    <Label x:Name="yonyazi" Content="" Grid.Column="3" HorizontalAlignment="Center" Margin="0,55,0,0" Grid.Row="3" VerticalAlignment="Top"/>
+                </Grid>
+            </Expander>
+        </Grid>
+
+    </Grid>
+</Fluent:RibbonWindow>
